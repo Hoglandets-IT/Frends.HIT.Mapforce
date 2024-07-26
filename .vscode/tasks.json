@@ -1,0 +1,11 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "build",
+			"type": "shell",
+			"command": "dotnet clean Frends.HIT.Mapforce; dotnet build Frends.HIT.Mapforce; dotnet clean Frends.HIT.Mapforce.Test; dotnet build Frends.HIT.Mapforce.Test",
+			"args": []
+		}
+	]
+}

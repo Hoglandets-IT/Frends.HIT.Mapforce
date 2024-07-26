@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Frends.HIT.Mapforce", "Frends.HIT.Mapforce.csproj", "{AFD42194-40E9-47FD-8A5A-205BB9EABE64}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AFD42194-40E9-47FD-8A5A-205BB9EABE64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFD42194-40E9-47FD-8A5A-205BB9EABE64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFD42194-40E9-47FD-8A5A-205BB9EABE64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFD42194-40E9-47FD-8A5A-205BB9EABE64}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1C3139A6-91F5-467E-AAD2-5D0829A82DF8}
+	EndGlobalSection
+EndGlobal
