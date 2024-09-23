@@ -42,9 +42,15 @@ public static class Helpers {
     /// Remove old temporary files
     /// </summary>
     /// <param name="files">Paths of files to remove</param>
-    public static void CleanFiles(List<string> files) {
+    /// <param name="DebugLog">Whether to log debug information</param> 
+    public static void CleanFiles(List<string> files, bool DebugLog) {
         foreach (var file in files) {
             try {
+                if (DebugLog) {
+                    try {
+                        File.Copy(file, "C:/Temp/MapforceDebugFile-" + Path.GetFileName(file) + ".bak");
+                    } catch {}
+                }
                 File.Delete(file);
             } catch {}
         }

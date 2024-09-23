@@ -64,6 +64,14 @@ public static class Definitions {
         [Display(Name = "Message Pending Delay")]
         [DefaultValue(14400)]
         public int MessagePendingDelay { get; set; } = 14400;
+
+        /// <summary>
+        /// Activate debug logging to C:\Temp\MapforceDebug.log
+        /// </summary>
+        /// <value></value>
+        [Display(Name = "Debug Logging")]
+        [DefaultValue(false)]
+        public bool DebugLogging { get; set; } = false;
     }
 
     /// <summary>

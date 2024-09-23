@@ -15,26 +15,50 @@ public class Main {
     /// <returns>Output</returns>
     public static Output RunExecutable(Input input)
     {
+        var DebugLog = (string ival) => {};
+        StreamWriter sw = File.CreateText("C:/Temp/MapforceDebug.log");
+
+        if (input.DebugLogging) {
+            DebugLog = (string ival) => {
+                sw.WriteLine(ival);
+            };
+        }
+
         List<string> createdFiles = new List<string>();
 
         var ProgramPath = Path.Join(input.MapforceExecutablePath, input.Program);
         ProgramPath = Path.GetFullPath(ProgramPath);
 
+        DebugLog("ProgramPath: " + ProgramPath);
+
         var InputFilePath = Path.GetTempFileName();
         File.WriteAllBytes(InputFilePath, input.Data);        
         createdFiles.Add(InputFilePath);
 
+        DebugLog("Input File Path: " + InputFilePath);
+
         var OutputFilePath = Path.GetTempFileName();
         createdFiles.Add(OutputFilePath);
+
+        DebugLog("Output File Path: " + OutputFilePath);
 
         var LogfilePath = Path.GetTempFileName();
         createdFiles.Add(LogfilePath);
 
+        DebugLog("Log File Path: " + LogfilePath);
+
         var ProgramBasepath = Path.GetDirectoryName(ProgramPath) ?? throw new Exception("Program path does not contain directory");
+        
+        DebugLog("Program Base Path: " + ProgramBasepath);
+        
         var TempfilePath = Path.Join(ProgramBasepath, "temp");
+
+        DebugLog("Temp File Path: " + TempfilePath);
+
 
         if (!Directory.Exists(TempfilePath)) {
             Directory.CreateDirectory(TempfilePath);
+            DebugLog("Created Temp Directory: " + TempfilePath);
         }
 
         var iniConfig = new List<string> {
@@ -57,6 +81,9 @@ public class Main {
         var IniPath = WriteIniFile(iniConfig);
         createdFiles.Add(IniPath);
 
+        DebugLog("Ini File Path: " + IniPath);
+        DebugLog("INI File contents: " + String.Join("\r\n", iniConfig));
+
         var args = new List<string> {
             "/c",
             ProgramPath,
@@ -67,6 +94,8 @@ public class Main {
             LogfilePath,
             "2>&1"    
         };
+
+        DebugLog("Args: " + String.Join(" ", args));
 
         var procInfo = new System.Diagnostics.ProcessStartInfo("cmd.exe");
         procInfo.UseShellExecute = false;
@@ -81,10 +110,13 @@ public class Main {
         var output = proc.StandardOutput.ReadToEnd();
         var error = proc.StandardError.ReadToEnd();
 
+        DebugLog("Output: " + output);
+        DebugLog("Error: " + error);
+
         proc.Close();
 
         if (error.Length > 0) {
-            CleanFiles(createdFiles);
+            CleanFiles(createdFiles, input.DebugLogging);
             throw new Exception(error);
         }
 
@@ -96,15 +128,20 @@ public class Main {
             Log = log
         };
         
-        
+        DebugLog("Reading result INI at " + IniPath);
+
         var resultIni = ReadIniFile(IniPath);
-        if (!resultIni.TryGetValue("mf_temp_files", out var mfTempFiles)) {
-            CleanFiles(createdFiles);
-            throw new Exception("Output file does not contain mf_temp_files: " + error + output + log);
+        foreach (var key in resultIni.Keys) {
+            DebugLog("ResultINI Key " + key + " Value " + resultIni[key]);
         }
 
+        if (!resultIni.TryGetValue("mf_temp_files", out var mfTempFiles)) {
+            CleanFiles(createdFiles, input.DebugLogging);
+            throw new Exception("Output file does not contain mf_temp_files: " + error + output + log);
+        }
+                
         if (!resultIni.TryGetValue("mfr_filename", out var mfrFilename)) {
-            CleanFiles(createdFiles);
+            CleanFiles(createdFiles, input.DebugLogging);
             throw new Exception("Output file does not contain mfr_filename: " + error + output + log);
         }
 
@@ -124,11 +161,14 @@ public class Main {
         responseVar.Filename = mfrFilename;
         responseVar.Data = File.ReadAllBytes(OutputFilePath);
 
-        CleanFiles(createdFiles);
+        CleanFiles(createdFiles, input.DebugLogging);
 
         if ( responseVar.Data.Length < 10 ) {
             throw new Exception("Output file is empty, conversion likely failed: " + error + output + log);
         }
+        
+        sw.Flush();
+        sw.Close();
 
         return responseVar;
     }
